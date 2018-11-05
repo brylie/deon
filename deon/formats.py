@@ -70,21 +70,26 @@ class Format(object):
 class Markdown(Format):
     """ Markdown template items
     """
-    template = "# {title}\n\n{sections}\n\n{docs_link}"
+    template = "# {title}\n\n{badge}\n\n{sections}\n\n{docs_link}"
     section_template = """## {title}
 {lines}"""
 
     line_template = " - [ ] **{line_id} {line_summary}**: {line}"
     docs_link = "*Data Science Ethics Checklist generated with [deon](http://deon.drivendata.org).*"
+    badge = "[![Deon badge](https://img.shields.io/badge/ethics%20checklist-deon-brightgreen.svg?style=popout-square)](http://deon.drivendata.org/)"
 
 
 class Rst(Format):
     """reStructuredText template items
     """
-    template = "{title}\n============\n\n{sections}\n\n{docs_link}"
+    template = "{title}\n============\n\n{badge}\n\n{sections}\n\n{docs_link}"
     section_template = """{title}\n---------\n\n{lines}"""
     line_template = "* [ ] **{line_id} {line_summary}**: {line}"
     docs_link = "*Data Science Ethics Checklist generated with* `deon <http://deon.drivendata.org>`_."
+    badge = """
+.. image:: https://img.shields.io/badge/ethics%20checklist-deon-brightgreen.svg?style=popout-square
+   :target: http://deon.drivendata.org
+    """
 
 
 class JupyterNotebook(Markdown):
@@ -142,6 +147,10 @@ class JupyterNotebook(Markdown):
 class Html(Format):
     """HTML template items"""
     template = """<h1>{title}</h1>
+<br/> <br/>
+<a href="http://deon.drivendata.org/">
+    <img src="https://img.shields.io/badge/ethics%20checklist-deon-brightgreen.svg?style=popout-square" alt="Deon badge" />
+</a>
 <br/> <br/>
 {sections}
 <br/> <br/>
