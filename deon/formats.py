@@ -23,6 +23,8 @@ class Format(object):
     line_delimiter = "\n"
     docs_link = "Data Science Ethics Checklist generated with deon (http://deon.drivendata.org)."
 
+    badge = ''
+
     def __init__(self, checklist):
         self.checklist = checklist
 
@@ -46,7 +48,11 @@ class Format(object):
 
         all_sections = self.section_delimiter.join(rendered_sections)
 
-        return self.template.format(title=self.checklist.title, sections=all_sections, docs_link=self.docs_link)
+        return self.template.format(
+            title=self.checklist.title,
+            sections=all_sections,
+            docs_link=self.docs_link,
+            badge=self.badge)
 
     def write(self, filepath, overwrite=False):
         """ Renders template and writes to `filepath`.
@@ -70,15 +76,14 @@ class Format(object):
 class Markdown(Format):
     """ Markdown template items
     """
+
+    badge = "[![Deon badge](https://img.shields.io/badge/ethics%20checklist-deon-brightgreen.svg?style=popout-square)](http://deon.drivendata.org/)"  # noqa: E501
+
     template = "# {title}\n\n{badge}\n\n{sections}\n\n{docs_link}"
     section_template = """## {title}
 {lines}"""
-
     line_template = " - [ ] **{line_id} {line_summary}**: {line}"
     docs_link = "*Data Science Ethics Checklist generated with [deon](http://deon.drivendata.org).*"
-    badge = """
-[![Deon badge](https://img.shields.io/badge/ethics%20checklist-deon-brightgreen.svg?style=popout-square)](http://deon.drivendata.org/)
-"""  # noqa: E501
 
 
 class Rst(Format):
@@ -97,7 +102,6 @@ class Rst(Format):
 class JupyterNotebook(Markdown):
     """ Jupyter notebook template items
     """
-
     append_delimiter = {
         "cell_type": "markdown",
         "metadata": {},
@@ -150,8 +154,6 @@ class Html(Format):
     """HTML template items"""
     template = """<h1>{title}</h1>
 <br/> <br/>
-{badge}
-<br/> <br/>
 {sections}
 <br/> <br/>
 <em>Data Science Ethics Checklist generated with <a href="http://deon.drivendata.org">deon.</a></em>"""
@@ -167,20 +169,14 @@ class Html(Format):
 
     line_template = "<li><input type='checkbox'><strong>{line_id} {line_summary}:</strong> {line}</input></li>"
     line_delimiter = "\n"
-    badge = """
-<a href="http://deon.drivendata.org/">
-    <img
-        src="https://img.shields.io/badge/ethics%20checklist-deon-brightgreen.svg?style=popout-square"
-        alt="Deon badge"
-    />
-</a>
-    """
+
     doc_template = """<html>
 <body>
 {text}
 </body>
 </html>
 """
+    badge = "<a href='http://deon.drivendata.org/'><img alt='Deon badge' src='https://img.shields.io/badge/ethics%20checklist-deon-brightgreen.svg?style=popout-square' /></a>"  # noqa: E501
 
     def write(self, filepath, overwrite=False):
         filepath = Path(filepath)
